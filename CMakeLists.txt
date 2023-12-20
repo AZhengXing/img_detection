@@ -18,19 +18,28 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(ai_service_msg REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(example_interfaces REQUIRED)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
-find_package(OpenCV 4.7.0 REQUIRED)
+find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
-link_directories(${OpenCV_LIBRARY_DIRS})
+link_directories(${OpenCV_LIBRARY_DIRS}
+/home/sunrise/xingzheng/ros_cv/src/ai_service_msg/lib/
+)
 
 
-include_directories(include)
+include_directories(include
+  /home/sunrise/xingzheng/ros_cv/src/ai_service_msg/include/
+)
 add_executable(img_detection_node src/img_detection_main.cpp)
-ament_target_dependencies(img_detection_node rclcpp sensor_msgs std_msgs)
+target_link_libraries(img_detection_node  opencv_world)
+ament_target_dependencies(img_detection_node rclcpp sensor_msgs std_msgs cv_bridge ai_service_msg example_interfaces)
 target_include_directories(img_detection_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)

@@ -1,6 +1,7 @@
 #pragma once 
 #include "rclcpp/rclcpp.hpp"
 #include <string>
+#include <chrono>
 namespace ImgSetting {
 enum class ImgFormat {
   NV12 = 0,
@@ -10,13 +11,15 @@ enum class ImgFormat {
 struct ImgResolution {
   size_t w{};
   size_t h{};
+  size_t len{};
 };
 struct ImgTopicConfig {
   std::string name;
   std::string topic_name;
   ImgSetting::ImgFormat format;
   ImgSetting::ImgResolution resolution;
-  size_t freq;
-  bool dump_pic;
+  std::chrono::milliseconds cycle_ms;
+  bool dump_img;
+  bool show_img;
 };
 } // namespace ImgSetting

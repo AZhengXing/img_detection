@@ -12,42 +12,35 @@ private:
   std::vector<UPtrImgDetction> detctors_list;
   std::vector<ImgSetting::ImgTopicConfig> detectors_config_list;
   rclcpp::TimerBase::SharedPtr img_detection_timer{nullptr};
-
+    rclcpp::Client<example_interfaces::srv::AddTwoInts>::SharedPtr client;
 public:
   ImgSetting::ImgTopicConfig config;
-
-  rclcpp::node_interfaces::NodeBaseInterface::SharedPtr
-  get_main_node_base_interface()  {
-    return this->get_node_base_interface();
-  }
-
-  auto get_sub_node_base_interface() {
-    std::vector<rclcpp::node_interfaces::NodeBaseInterface::SharedPtr>
-        sub_nodes;
-    for (const auto &detecor : detctors_list) {
-      sub_nodes.push_back(detecor->get_node_base_interface());
-    }
-    return sub_nodes;
-  }
-
   ImgDetectionNode(const std::string &node_name, rclcpp::NodeOptions opts);
   virtual ~ImgDetectionNode();
 };
+
 
 ImgDetectionNode::ImgDetectionNode(
     const std::string &node_name,
     rclcpp::NodeOptions opts = rclcpp::NodeOptions{})
     : rclcpp::Node{node_name, opts} {
+  // return;
   ImgSetting::ImgTopicConfig config_1;
-  config.name = "cam2";
-  config.topic_name = "/pic/rtsp_cam2_nv12";
-  config.freq = 1;
-  config.format = ImgSetting::ImgFormat::NV12;
+  config_1.name = "cam2";
+  config_1.show_img = true;
+  config_1.resolution.h = 720;
+  config_1.resolution.w = 1280;
+  config_1.topic_name = "/pic/rtsp_cam2_nv12";
+  config_1.cycle_ms = std::chrono::milliseconds{1000};
+  config_1.format = ImgSetting::ImgFormat::NV12;
   ImgSetting::ImgTopicConfig config_2;
-  config.name = "cam1";
-  config.topic_name = "/pic/rtsp_cam1_nv12";
-  config.freq = 1;
-  config.format = ImgSetting::ImgFormat::NV12;
+  config_2.name = "cam1";
+  config_2.resolution.w = 1920;
+  config_2.resolution.h = 1080;
+  config_2.show_img = true;
+  config_2.topic_name = "/pic/rtsp_cam1_nv12";
+  config_2.cycle_ms = std::chrono::milliseconds{1000};
+  config_2.format = ImgSetting::ImgFormat::NV12;
   detectors_config_list.emplace_back(config_1);
   detectors_config_list.emplace_back(config_2);
   for (const auto &config : detectors_config_list) {
